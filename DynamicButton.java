@@ -73,10 +73,16 @@ public class DynamicButton extends JFrame implements ActionListener{
                        
                    // } else{
                         clickedAmt++;
+                        String title = btn.getText();
+                        String[] input = title.split("-",2);
+                        int x = Integer.parseInt(input[0]);
+                        int y = Integer.parseInt(input[1]);
                         if(clickedAmt%2==0){
                             btn.setBackground(Color.GREEN);
+                            btnClickArr[x][y] =1;
                         } else{
                             btn.setBackground(Color.YELLOW);
+                            btnClickArr[x][y] =2;
                         }
                         btn.setEnabled(false);
                         lbTest.setText(btn.getText());
