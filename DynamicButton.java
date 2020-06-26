@@ -11,7 +11,7 @@ import java.util.*;
 
 public class DynamicButton extends JFrame implements ActionListener{
     public static int clickedAmt =0;
-
+    public int[][] btnClickArr = new int[15][15];
     public JFrame frame;
     JLabel lbTest= new JLabel("test");
 
