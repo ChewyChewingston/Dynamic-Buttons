@@ -1,23 +1,18 @@
-import java.util.Scanner; 
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.JButton;
 import java.awt.event.*;
-import java.awt.GridLayout;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.*;
 
 
 public class DynamicButton extends JFrame implements ActionListener{
     public static int clickedAmt =0;
     public int[][] btnClickArr = new int[15][15];
     public JFrame frame;
-    JLabel lbTest= new JLabel("test");
+    public static String finaltxt = "tie";
+    JLabel lbTest= new JLabel("Score");
 
     public DynamicButton(){
         super("Dynamic Buttons");
-       // setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
         setSize(500, 500);
         AddButtons(15,15);
@@ -42,12 +37,10 @@ public class DynamicButton extends JFrame implements ActionListener{
         int NumRows =1;
         int NumCols =1;
 
-       int finalXcd=0;
-       int finalycd=0;
+        int finalXcd=0;
+        int finalycd=0;
     
     
-        //ArrayList<JButton> buttonsList = new ArrayList<JButton>(totalAmt);
-
         for (int i = 0; i<totalAmt; i++){
             if((i!=0)&&(i%columns ==0)){
                 yCoordinate = yCoordinate+ 50;
@@ -57,37 +50,30 @@ public class DynamicButton extends JFrame implements ActionListener{
             }
 
             JButton btn = new CreateRoundButton(NumRows+"-"+NumCols);
-           //JButton btn  = new JButton(NumRows+"-"+NumCols);
             btn.setBounds(xCoordinate,yCoordinate,50,50);
             btn.setOpaque(false);
             btn.setBackground(Color.LIGHT_GRAY);
            
-            btn.setFont(new Font("Arial", 0, 8));
-           
+            btn.setFont(new Font("Comic Sans", 0, 8));
             
             btn.addActionListener(new ActionListener(){
 
-             // int currentClick = 0;
                 public void actionPerformed(ActionEvent e) {
-                  // if(currentClick>0){
-                       
-                   // } else{
-                        clickedAmt++;
-                        String title = btn.getText();
-                        String[] input = title.split("-",2);
-                        int x = Integer.parseInt(input[0]);
-                        int y = Integer.parseInt(input[1]);
-                        if(clickedAmt%2==0){
-                            btn.setBackground(Color.GREEN);
-                            btnClickArr[x][y] =1;
-                        } else{
-                            btn.setBackground(Color.YELLOW);
-                            btnClickArr[x][y] =2;
-                        }
-                        btn.setEnabled(false);
-                        lbTest.setText(btn.getText());
-                   // }
-                  //  currentClick++;
+
+                    clickedAmt++;
+                    String title = btn.getText();
+                    String[] input = title.split("-",2);
+                    int x = Integer.parseInt(input[0]);
+                    int y = Integer.parseInt(input[1]);
+                    if(clickedAmt%2==0){
+                        btn.setBackground(Color.GREEN);
+                        btnClickArr[x][y] =1;
+                    } else{
+                        btn.setBackground(Color.YELLOW);
+                        btnClickArr[x][y] =2;
+                    }
+                    btn.setEnabled(false);
+                    lbTest.setText(checkWin());
                 }
             });
 
@@ -98,103 +84,110 @@ public class DynamicButton extends JFrame implements ActionListener{
             finalycd=yCoordinate;
         }
 
-        
-
-       // frame.pack();
-
         JButton resetBtn = new JButton("Reset");
         resetBtn.setBounds(finalXcd/2,finalycd+100,100,50);
         resetBtn.setBackground(Color.gray);
-
-       
         lbTest.setBounds(finalXcd/2,finalycd+140,200,50);
-       
-
         resetBtn.addActionListener(new ActionListener(){
 
         public void actionPerformed(ActionEvent e) {
-            // for(int j =0; j>totalAmt; j++){
-            //     //SetBackGnd(buttonsList.get(j));setActionCommand(String)
-            // }
-
-            String name = "";
             for(Component c : frame.getContentPane().getComponents()) {
-               
-
                 if(c instanceof JButton){
                     JButton bn = (JButton) c;
                     bn.setBackground(Color.LIGHT_GRAY);
                     bn.setEnabled(true);
                     bn.setOpaque(false);
-                    name += bn.getText() + "|";
-                    //String text = c.getText();
                 }
                 if(c instanceof JLabel){
                     JLabel lb2=(JLabel)c;
-                    lb2.setText("null");
+                    finaltxt ="tie";
+                    lb2.setText("Score");
+                    for(int i = 0; i<=15; i++){
+                        for(int j = 0; j<=15; j++){
+                            btnClickArr[i][j] = 0;
+                        }
+                    }
                 }
-
             }
-
             resetBtn.setBackground(Color.YELLOW);
-
-
         }
     });
-
-
 
     frame.add(resetBtn); 
     frame.add(lbTest);
     frame.setVisible(true); 
-
-
-       
+    
     }
 
     public static void SetBackGnd(JButton bttn){
         bttn.setBackground(Color.RED);
     }
+
+    public  String checkWin(){
+        
+        int horz =0;
+        int horzCounter1=0;
+        int horzCounter2=0;
+        int vert =0;
+        int vertCounter1 =0;
+        int vertCounter2 =0;
+        
+        for (int i=1; i<15; i++){
+            for (int j=1; j<15; j++){
+                horz = btnClickArr[i][j];
+                if(horz == 1){
+                    horzCounter1++;
+                    if(horzCounter1>=5){
+                        finaltxt = "Green win";
+                        return finaltxt;
+                    }
+                }else{
+                    horzCounter1 =0;
+                }
+
+                if(horz == 2){
+                    horzCounter2++;
+                    if(horzCounter2>=5){
+                        finaltxt = "Yellow win";
+                        return finaltxt;
+                        
+                    }
+                }else{
+                    horzCounter2 =0;
+                }
+            }
+        }
+
+        for (int i=1; i<15; i++){
+            for (int j=1; j<15; j++){    
+                vert = btnClickArr[j][i];
+                if(vert == 1){
+                    vertCounter1++;
+                    if(vertCounter1>=5){
+                        finaltxt = "Green win";
+                        return finaltxt;
+                    }
+                }else{
+                    vertCounter1 =0;
+                }
+
+                if(vert == 2){
+                    vertCounter2++;
+                    if(vertCounter2>=5){
+                        finaltxt = "Yellow win";
+                        
+                        return finaltxt;
+                    }
+                }else{
+                    vertCounter2 =0;
+                }
+            }
+        }
+        
+        return finaltxt;
+    }
     
-    public static void main(String[] args) {
-
-
-        // Scanner inputRows = new Scanner(System.in);
-        // System.out.println("Enter in how many rows you want for your buttons.");
-        // String stringRows = inputRows.nextLine();
-        // int numRows =0;
-        // boolean isInt = true;
-        // try{
-        //     numRows = Integer.parseInt(stringRows);
-        // }catch(NumberFormatException e){
-        //     isInt = false;
-        //     System.out.println("Not integer.");
-        // }
-        
-        // Scanner inputCols = new Scanner(System.in);
-        // System.out.println("Enter in how many columns you want for your buttons.");
-        // String stringCols = inputCols.nextLine();
-        // int numCols=0;
-        // try{
-        //     numCols = Integer.parseInt(stringCols);
-        // }catch(NumberFormatException e){
-        //     isInt=false;
-        //     System.out.println("Not integer.");
-        // }
-        
-        // if(isInt){
-            
-        //     DynamicButtonMethod(numRows,numCols);
-            
-        // }
-        
-        //DynamicButtonMethod(10,10);
+    public static void main(String[] args) {        
         DynamicButton dybtn = new DynamicButton();
-       // dybtn.DynamicButtonMethod(10,10);
-        
-
-        
-
-
     }
 }
