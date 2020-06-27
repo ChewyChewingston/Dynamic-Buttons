@@ -8,7 +8,7 @@ public class DynamicButton extends JFrame implements ActionListener{
     public static int clickedAmt =0;
     public int[][] btnClickArr = new int[15][15];
     public JFrame frame;
-    public static String finaltxt = "tie";
+    //public static String finaltxt = "tie";
     JLabel lbTest= new JLabel("Score");
 
     public DynamicButton(){
@@ -68,12 +68,18 @@ public class DynamicButton extends JFrame implements ActionListener{
                     if(clickedAmt%2==0){
                         btn.setBackground(Color.GREEN);
                         btnClickArr[x][y] =1;
+                        if(checkWin(x,y,1)){
+                            lbTest.setText("Green wins!");
+                        }
                     } else{
                         btn.setBackground(Color.YELLOW);
                         btnClickArr[x][y] =2;
+                        if(checkWin(x,y,2)){
+                            lbTest.setText("Yellow wins!");
+                        }
                     }
                     btn.setEnabled(false);
-                    lbTest.setText(checkWin());
+                    //lbTest.setText(checkWin());
                 }
             });
 
@@ -98,16 +104,16 @@ public class DynamicButton extends JFrame implements ActionListener{
                     bn.setEnabled(true);
                     bn.setOpaque(false);
                 }
-                if(c instanceof JLabel){
-                    JLabel lb2=(JLabel)c;
-                    finaltxt ="tie";
-                    lb2.setText("Score");
-                    for(int i = 0; i<=15; i++){
-                        for(int j = 0; j<=15; j++){
-                            btnClickArr[i][j] = 0;
-                        }
-                    }
-                }
+                //if(c instanceof JLabel){
+                    //JLabel lb2=(JLabel)c;
+                    //finaltxt ="tie";
+                    //lb2.setText("Score");
+                    // for(int i = 0; i<=15; i++){
+                    //     for(int j = 0; j<=15; j++){
+                    //         btnClickArr[i][j] = 0;
+                    //     }
+                    // }
+                //}
             }
             resetBtn.setBackground(Color.YELLOW);
         }
@@ -123,69 +129,142 @@ public class DynamicButton extends JFrame implements ActionListener{
         bttn.setBackground(Color.RED);
     }
 
-    public  String checkWin(){
-        
-        int horz =0;
-        int horzCounter1=0;
-        int horzCounter2=0;
-        int vert =0;
-        int vertCounter1 =0;
-        int vertCounter2 =0;
-        
-        for (int i=1; i<15; i++){
-            for (int j=1; j<15; j++){
-                horz = btnClickArr[i][j];
-                if(horz == 1){
-                    horzCounter1++;
-                    if(horzCounter1>=5){
-                        finaltxt = "Green win";
-                        return finaltxt;
-                    }
-                }else{
-                    horzCounter1 =0;
-                }
 
-                if(horz == 2){
-                    horzCounter2++;
-                    if(horzCounter2>=5){
-                        finaltxt = "Yellow win";
-                        return finaltxt;
-                        
-                    }
-                }else{
-                    horzCounter2 =0;
-                }
-            }
+    public boolean checkWin(int x, int y, int colorVal){
+        int count =1;
+       // int color = btnClickArr[x][y];
+        int i = 1;
+
+        //check columns
+        while(colorVal == btnClickArr[x-i][y]){
+            i++;
+            count++;
+        }
+        i =1;
+        while(colorVal==btnClickArr[x+i][y]){
+            i++;
+            count++;
+        }
+        if(count>=5){
+            return true;
         }
 
-        for (int i=1; i<15; i++){
-            for (int j=1; j<15; j++){    
-                vert = btnClickArr[j][i];
-                if(vert == 1){
-                    vertCounter1++;
-                    if(vertCounter1>=5){
-                        finaltxt = "Green win";
-                        return finaltxt;
-                    }
-                }else{
-                    vertCounter1 =0;
-                }
-
-                if(vert == 2){
-                    vertCounter2++;
-                    if(vertCounter2>=5){
-                        finaltxt = "Yellow win";
-                        
-                        return finaltxt;
-                    }
-                }else{
-                    vertCounter2 =0;
-                }
-            }
+        //check rows
+        i =1;
+        count =1;
+        while(colorVal == btnClickArr[x][y-i]){
+            i++;
+            count++;
+        }
+        i =1;
+        while(colorVal==btnClickArr[x][y+i]){
+            i++;
+            count++;
+        }
+        if(count>=5){
+            return true;
         }
         
-        return finaltxt;
+        //diagonal downwards
+        i =1;
+        count =1;
+        while(colorVal == btnClickArr[x-i][y-i]){
+            i++;
+            count++;
+        }
+        i=1;
+        while(colorVal==btnClickArr[x+i][y+i]){
+            i++;
+            count++;
+        }
+        if(count>=5){
+            return true;
+        }
+
+        //diagonal upwards
+        i =1;
+        count =1;
+        while(colorVal == btnClickArr[x+i][y-i]){
+            i++;
+            count++;
+        }
+        i=1;
+        while(colorVal==btnClickArr[x-i][y+i]){
+            i++;
+            count++;
+        }
+        if(count>=5){
+            return true;
+        } else{
+            return false;
+        }
     }
+
+
+
+    // public String checkWin(){
+        
+    //     int horz =0;
+    //     int horzCounter1=0;
+    //     int horzCounter2=0;
+    //     int vert =0;
+    //     int vertCounter1 =0;
+    //     int vertCounter2 =0;
+        
+    //     for (int i=1; i<15; i++){
+    //         for (int j=1; j<15; j++){
+    //             horz = btnClickArr[i][j];
+    //             if(horz == 1){
+    //                 horzCounter1++;
+    //                 if(horzCounter1>=5){
+    //                     finaltxt = "Green win";
+    //                     return finaltxt;
+    //                 }
+    //             }else{
+    //                 horzCounter1 =0;
+    //             }
+
+    //             if(horz == 2){
+    //                 horzCounter2++;
+    //                 if(horzCounter2>=5){
+    //                     finaltxt = "Yellow win";
+    //                     return finaltxt;
+                        
+    //                 }
+    //             }else{
+    //                 horzCounter2 =0;
+    //             }
+    //         }
+    //     }
+
+    //     for (int i=1; i<15; i++){
+    //         for (int j=1; j<15; j++){    
+    //             vert = btnClickArr[j][i];
+    //             if(vert == 1){
+    //                 vertCounter1++;
+    //                 if(vertCounter1>=5){
+    //                     finaltxt = "Green win";
+    //                     return finaltxt;
+    //                 }
+    //             }else{
+    //                 vertCounter1 =0;
+    //             }
+
+    //             if(vert == 2){
+    //                 vertCounter2++;
+    //                 if(vertCounter2>=5){
+    //                     finaltxt = "Yellow win";
+                        
+    //                     return finaltxt;
+    //                 }
+    //             }else{
+    //                 vertCounter2 =0;
+    //             }
+    //         }
+    //     }
+        
+    //     return finaltxt;
+    // }
     
     public static void main(String[] args) {        
         DynamicButton dybtn = new DynamicButton();
