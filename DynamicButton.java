@@ -5,7 +5,7 @@ import java.awt.event.*;
 
 
 public class DynamicButton extends JFrame implements ActionListener{
-    public static int clickedAmt =0;
+    //public static int clickedAmt =0;
     public int[][] btnClickArr = new int[17][17];
     public JFrame frame;
     //public static String finaltxt = "tie";
@@ -29,7 +29,7 @@ public class DynamicButton extends JFrame implements ActionListener{
         frame.setLayout(null);  
 
         int totalAmt = rows*columns;
-        int xCoordinate = 50;
+        int xCoordinate = 35;
         int yCoordinate = 0;
         int NumRows =1;
         int NumCols =1;
@@ -39,14 +39,14 @@ public class DynamicButton extends JFrame implements ActionListener{
     
         for (int i = 0; i<totalAmt; i++){
             if((i!=0)&&(i%columns ==0)){
-                yCoordinate = yCoordinate+ 50;
-                xCoordinate=50; 
+                yCoordinate = yCoordinate+ 35;
+                xCoordinate=35;
                 NumRows++;
                 NumCols=1;
             }
 
             JButton btn = new CreateRoundButton(NumRows+"-"+NumCols);
-            btn.setBounds(xCoordinate,yCoordinate,50,50);
+            btn.setBounds(xCoordinate,yCoordinate,35,35);
             btn.setOpaque(false);
             btn.setBackground(Color.LIGHT_GRAY);
            
@@ -54,33 +54,34 @@ public class DynamicButton extends JFrame implements ActionListener{
             
             btn.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e) {
-                    clickedAmt++;
+                    //clickedAmt++;
+                    boolean earlyWin = false;
                     String title = btn.getText();
                     String[] input = title.split("-",2);
                     int x = Integer.parseInt(input[0]);
                     int y = Integer.parseInt(input[1]);
-                    
-                    if(clickedAmt%2==0){
-                        btn.setBackground(Color.GREEN);
-                        btnClickArr[x][y] =1;
-                        if(checkWin(x,y,1)){
-                            lbTest.setText("Green wins!");
-                            gameOver();
-                        }
-                    } else{
-                        btn.setBackground(Color.YELLOW);
-                        btnClickArr[x][y] =2;
-                        if(checkWin(x,y,2)){
-                            lbTest.setText("Yellow wins!");
-                            gameOver();
-                        }
+
+                    boolean maximumRow = false;
+                    if(y>14){
+                        maximumRow = true;
+                    }
+
+                    btn.setBackground(Color.GREEN);
+                    btnClickArr[x][y] =1;
+                    if(checkWin(x,y,1)){
+                        lbTest.setText("Green wins!");
+                        earlyWin =true;
+                        gameOver();
                     }
                     btn.setEnabled(false);
+
+                    //then do
+                    look4Button(x, y, maximumRow, earlyWin);                    
                 }
             });
 
             frame.add(btn);
-            xCoordinate = xCoordinate+ 50;
+            xCoordinate = xCoordinate+ 35;
             NumCols++;
             finalXcd=xCoordinate;
             finalycd=yCoordinate;
@@ -213,7 +214,48 @@ public class DynamicButton extends JFrame implements ActionListener{
             }
         }
     }
-    
+
+    public void look4Button(int x, int y, boolean maxRow, boolean earlyWinInput){
+        for(Component c : frame.getContentPane().getComponents()) {
+            if(c instanceof JButton){
+                JButton bn = (JButton) c;
+                String btnName = bn.getText();
+                String[] output = btnName.split("-",2);
+                
+                int output1 = Integer.parseInt(output[0]);
+                int output2 = Integer.parseInt(output[1]);
+
+                if(output1 ==x){
+                    if(maxRow){
+                        if(output2 ==y-1){
+                            int newy1 = y-1;
+                            bn.setBackground(Color.YELLOW);
+                            bn.setEnabled(false);
+                            btnClickArr[x][newy1] = 2;
+                            
+                            if((checkWin(x, newy1, 2))&& !(earlyWinInput)){
+                                lbTest.setText("Yellow wins!");
+                                gameOver();
+                            }
+                        } 
+                    }else{
+                       if(output2 ==y+1){
+                            int newy2 = y+1;
+                            bn.setBackground(Color.YELLOW);
+                            bn.setEnabled(false);
+                            btnClickArr[x][newy2]= 2;
+                            if((checkWin(x, newy2, 2))&& !(earlyWinInput)){
+                                lbTest.setText("Yellow wins!");
+                                gameOver();
+                            }
+                        } 
+                    }
+                } 
+                
+            }
+        }
+    }
+
     public static void main(String[] args) {        
         DynamicButton dybtn = new DynamicButton();
     }
